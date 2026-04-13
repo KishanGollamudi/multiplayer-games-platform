@@ -1,0 +1,13 @@
+{
+  "name": "multiplayer-games-backend",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "api-gateway",
+    "services/uno-service",
+    "services/cards-service",
+    "services/chess-service",
+    "services/snakes-service",
+    "services/rummy-service"
+  ]
+}

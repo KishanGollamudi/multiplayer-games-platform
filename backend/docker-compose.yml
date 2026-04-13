@@ -1,0 +1,101 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: multiplayer-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-multiplayer_games}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    working_dir: /app/api-gateway
+    command: npm start
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - uno-service
+      - cards-service
+      - chess-service
+      - snakes-service
+      - rummy-service
+    ports:
+      - "3000:3000"
+
+  uno-service:
+    build:
+      context: .
+      dockerfile: services/uno-service/Dockerfile
+    working_dir: /app/services/uno-service
+    command: npm start
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - "3001:3001"
+
+  cards-service:
+    build:
+      context: .
+      dockerfile: services/cards-service/Dockerfile
+    working_dir: /app/services/cards-service
+    command: npm start
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - "3002:3002"
+
+  chess-service:
+    build:
+      context: .
+      dockerfile: services/chess-service/Dockerfile
+    working_dir: /app/services/chess-service
+    command: npm start
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - "3003:3003"
+
+  snakes-service:
+    build:
+      context: .
+      dockerfile: services/snakes-service/Dockerfile
+    working_dir: /app/services/snakes-service
+    command: npm start
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - "3004:3004"
+
+  rummy-service:
+    build:
+      context: .
+      dockerfile: services/rummy-service/Dockerfile
+    working_dir: /app/services/rummy-service
+    command: npm start
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - "3005:3005"
+
+volumes:
+  postgres-data:
